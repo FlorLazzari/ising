@@ -1,11 +1,51 @@
 #include "metropolis.h"
+#include <time.h>
+#include <stdlib.h>
 
 int metropolis(int *lattice, int n, float T) {
-  ********
+  int E_lattice;
+  E_lattice = energy(lattice, n);
+  int site = flip(lattice, n, T);
   return 0;
 }
 
+int delta_E (int *lattice, int n, int site){
+  int DE = 0;
+  int sum_neigh = 0;
+  int i, j;
+  j = site%n;
+  i = (site - j)/n;
+
+  int up, right, down, left;
+  up = site - n;
+  right = site + 1;
+  down = site + n;
+  left = site -1;
+
+  // primer fila
+  if (i == 0){
+    up = (n-1)*n + j;
+  }
+  // ultima fila
+  if (i == (n-1)){
+    down = j;
+  }
+  // primer columna
+  if (j == 0){
+    left = i*n + (n-1);
+  }
+  // ultima columna
+  if (j == (n-1)){
+    right = i*n;
+  }
+
+  sum_neigh = lattice[right] + lattice[down] + lattice[left] + lattice[up];
+  DE = -2*lattice[site]*sum_neigh;
+  return DE;
+}
+
 int sum_E (int *lattice, int selected, int right, int down) {
+  int sum = 0;
   // caso: todos iguales
   if (lattice[selected] == lattice[right] && lattice[selected] == lattice[down]){
     sum = 2;
@@ -21,7 +61,6 @@ int sum_E (int *lattice, int selected, int right, int down) {
   }
   return sum;
 }
-
 
 // calcula energia del lattice
 int energy(int *lattice, int n) {
@@ -43,28 +82,28 @@ int energy(int *lattice, int n) {
       }
       // ultima fila
       else if (i == n){
-      ********
+        E += sum_E(lattice, selected, right, j);
       }
       // ultima columna
       else if (j == n){
-      ********
+        E += sum_E(lattice, selected, selected-n+1, down);
+      }
+      // bulk
+      else {
+        E += sum_E(lattice, selected, right, down);
       }
     }
   }
+  return E;
 }
 
-
 int pick_site(int *lattice, int n, int idx) {
-  int r = rand()%n;
+  int r = rand()%(n*n);
   return r;
 }
 
-
-
-
-
-
 int flip(int *lattice, int n, float T) {
-  int sitio = pick_site(lattice, n);
+  int site = pick_site(lattice, n, 0);
+  int DE = delta_E(lattice, n, site);
   return 0;
 }
