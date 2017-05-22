@@ -14,30 +14,13 @@ int delta_E (int *lattice, int n, int site){
   int sum_neigh = 0;
   int i, j;
   j = site%n;
-  i = (site - j)/n;
+  i = (site - j)/n; // ****funciona usar site/n ?
 
   int up, right, down, left;
-  up = site - n;
-  right = site + 1;
-  down = site + n;
-  left = site -1;
-
-  // primer fila
-  if (i == 0){
-    up = (n-1)*n + j;
-  }
-  // ultima fila
-  if (i == (n-1)){
-    down = j;
-  }
-  // primer columna
-  if (j == 0){
-    left = i*n + (n-1);
-  }
-  // ultima columna
-  if (j == (n-1)){
-    right = i*n;
-  }
+  up = ((i-1+n)%n)*n+j;
+  down = j+((i+1+n)%n)*n;
+  right = ((j+1+n)%n)+i*n;
+  left = ((j-1+n)%n)+i*n;
 
   sum_neigh = lattice[right] + lattice[down] + lattice[left] + lattice[up];
   DE = -2*lattice[site]*sum_neigh;
@@ -64,19 +47,19 @@ int sum_E (int *lattice, int selected, int right, int down) {
 
 
 int sum_E_version2 (int *lattice, int n, int idx){
-// filas
-int i = idx/n;
-//columnas
-int j = idx%n;
+  // filas
+  int i = idx/n;
+  //columnas
+  int j = idx%n;
 
-int up, down, right, left, sum;
+  int up, down, right, left, sum;
 
-// hacer este cambio evitaria tantos "if andentro de for"
-up = lattice[((i-1+n)%n)*n+j];
-down = lattice[j+((i+1+n)%n)*n];
-right = lattice[((j+1+n)%n)+i*n];
-left = lattice[((j-1+n)%n)+i*n];
-sum = up + down + right + left;
+  // hacer este cambio evitaria tantos "if andentro de for"
+  up = lattice[((i-1+n)%n)*n+j];
+  down = lattice[j+((i+1+n)%n)*n];
+  right = lattice[((j+1+n)%n)+i*n];
+  left = lattice[((j-1+n)%n)+i*n];
+  sum = up + down + right + left;
 
 }
 
@@ -95,7 +78,7 @@ int energy(int *lattice, int n) {
 			selected = i*n+j;
 			down = j+((i+1+n)%n)*n; // para ultima fila, es [(2n)%n *n + j] = j
 			right = ((j+1+n)%n)+i*n; // para ultima columna es [(2n)%n + i*n] = i*n
-      
+
       // ver si se puede mejorar el sum_E, abajo otra solucion
       //E += sum_E(lattice, selected, right, down);
       E += lattice[selected]*(lattice[right]+lattice[down]);
