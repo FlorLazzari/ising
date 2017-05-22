@@ -1,0 +1,12 @@
+~~~Funciones hechas~~~
+- pick_site
+- energy
+
+~~~Funciones para terminar~~~
+-flip site
+-sum_E
+-delta_E
+-metropolis
+
+
+

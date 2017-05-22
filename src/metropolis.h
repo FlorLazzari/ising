@@ -6,4 +6,5 @@ int flip(int *lattice, int n, float T);
 int delta_E (int *lattice, int n, int site);
 int energy(int *lattice, int n);
 int sum_E (int *lattice, int selected, int right, int down);
+int sum_E_version2 (int *lattice, int n, int idx);
 #endif
