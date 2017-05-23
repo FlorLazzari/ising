@@ -1,7 +1,7 @@
 ~~~Funciones hechas~~~
 - pick_site
-- energy
--delta_E
+- energy (tiene B y J)
+-delta_E (tiene B y J)
 
 ~~~Funciones para terminar~~~
 -flip site

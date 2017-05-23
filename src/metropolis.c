@@ -1,6 +1,7 @@
 #include "metropolis.h"
 #include <time.h>
 #include <stdlib.h>
+#include <math.h>
 
 int metropolis(int *lattice, int n, float T, float J, float B) {
   float E_lattice;
@@ -94,6 +95,26 @@ int pick_site(int *lattice, int n, int idx) {
   int r;
   r = (int)(((float)rand()/RAND_MAX) * (n*n));
   return r;
+}
+
+int list_exp(double *list, float T, float J, float B){
+  int i;
+  double DE;
+  for (i = 0; i < 5; i++) {
+    DE = (double)(2*(J*(i*2-4)+B));
+    list[i] = exp(-(DE/T)); //el xp de verdad
+    printf("estoy haciendo exp de esta delta_E %.2lf y me da %.2lf\n", DE, list[i]);
+  }
+  return 0;
+}
+
+double probability(int spin, float DE, float J, float B, float T, double *list){
+  int index;
+  // ***no hay posibilidad de que se pisen para distintos J y B??
+  index = ((int)((DE/(2)-B)/J) + 4)/2; // ** le sacamos el spin??
+  printf("con esta DE %.2f doy este indice %i\n",DE, index);
+  double p = (list[index]); // *** SI NO FUNICONA MIRAR ACA Y EN LOS DOUBLE
+  return p;
 }
 
 int flip(int *lattice, int n, float T, float J, float B) {
