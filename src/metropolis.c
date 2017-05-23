@@ -7,12 +7,11 @@ int metropolis(int *lattice, int n, float T, float J, float B, float* p_e , floa
   int site = pick_site(lattice, n);
   double r;
   float DE = delta_E (lattice, n, site, J, B);
-  int DM = delta_magnet(lattice, site);
+  float DM = delta_magnet(lattice, site, n);
   if (DE <= 0) { // tomo el cambio
     flip(lattice, n, site);
     *p_e += DE;
     *p_m += DM;
-    printf("FLIP sitio = %i con un DE = %f \n", site, DE);
   }
   else {
     r = (((double)rand())/RAND_MAX);
@@ -21,27 +20,27 @@ int metropolis(int *lattice, int n, float T, float J, float B, float* p_e , floa
       flip(lattice, n, site);
       *p_e += DE;
       *p_m += DM;
-      printf("FLIP sitio = %i con un DE = %f con una prob = %lf RANDOM = %lf \n ", site, DE, prob_exp, r);
     }
     else {
-    printf("NO flip sitio = %i con un DE = %f con una prob = %lf RANDOM = %lf \n", site, DE, prob_exp, r);  
     }
   }
   return 0;
 }
 
-int magnet(int *lattice, int n){
+float magnet(int *lattice, int n){
   int i;
-  int M = 0;
+  float M = 0;
   for (i = 0; i < n*n; i++) {
     M += lattice[i];
   }
-  return M;
+  return M/(n*n);
 }
 
-int delta_magnet(int *lattice, int site){
-  int DM;
-  DM = -2*lattice[site];
+float delta_magnet(int *lattice, int site, int n){
+  float DM;
+  DM = (-2*(float)lattice[site])/(n*n);
+  // printf("DM = %f\n", DM);
+  return DM;
 }
 
 float delta_E (int *lattice, int n, int site, float J, float B){
@@ -103,7 +102,12 @@ int list_exp(double *list, float T, float J, float B){
 double probability(int spin, float DE, float J, float B, float T, double *list){
   int index;
   // ***no hay posibilidad de que se pisen para distintos J y B??
-  index = ((int)((DE/(2)-B)/J) + 4)/2; // ** le sacamos el spin??
+  if (J == 0){
+    index = 0; // **esto esta bien??
+  }
+  else{
+    index = ((int)((DE/(2)-B)/J) + 4)/2; // ** le sacamos el spin??
+  }
   double p = (list[index]); // *** SI NO FUNICONA MIRAR ACA Y EN LOS DOUBLE
   return p;
 }

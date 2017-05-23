@@ -4,31 +4,36 @@
 #include "metropolis.h"
 #include "lattice.h"
 
+
 int main(int argc, char **argv) {
-  int n = 3;
+  FILE *fdat;
+  fdat = fopen("datos_magnet_energy.csv", "w");
+  fprintf(fdat, "i    M    E\n");
+  int n = 20;
   int *lattice = malloc(n * n * sizeof(int));
   double *list = malloc(5* sizeof(double));
   float prob = 0.5;
-  float T = 2.0, J = 1, B = 0;;
-  int niter = 4;
+  float T = 2.0, J = 0, B = 5;
+  int niter = 10000;
   srand(time(NULL));
   fill_lattice(lattice, n, prob);
   list_exp(list, T, J, B);
 
   float E = energy(lattice, n, J, B);
-  int M = magnet(lattice, n);
+  float M = magnet(lattice, n);
   float* p_e = &E;
-  int* p_m = &M;
+  float* p_m = &M;
   float* energy_array = malloc(niter * sizeof(float)); // aca voy a guardar los valores de energia
-  int* magnet_array = malloc(niter * sizeof(int)); // aca voy a guardar los valores de magnetizacon
+  float* magnet_array = malloc(niter * sizeof(float)); // aca voy a guardar los valores de magnetizacon
 
   for (int i = 0; i < niter; i++) {
     metropolis(lattice, n, T, J, B, p_e, p_m, list);
-    print_lattice(lattice, n);
+    // print_lattice(lattice, n);
     energy_array[i] = *p_e;
     magnet_array[i] = *p_m;
-    printf("ARRAY ENERGIA = %f\n", energy_array[i]);
+    // printf("ARRAY MAG = %f\n", magnet_array[i]);
+    // printf("ARRAY ENERGIA = %f\n", energy_array[i]);
+	  fprintf(fdat, "%i,%3.6g,%3.3g \n",i, magnet_array[i], energy_array[i]);
   }
-
   return 0;
 }

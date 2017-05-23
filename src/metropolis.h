@@ -9,6 +9,6 @@ int sum_E (int *lattice, int selected, int right, int down);
 int sum_E_version2 (int *lattice, int n, int idx);
 int list_exp(double *list, float T, float J, float B);
 double probability(int spin, float DE, float J, float B, float T, double *list);
-int magnet(int *lattice, int n);
-int delta_magnet(int *lattice, int site);
+float magnet(int *lattice, int n);
+float delta_magnet(int *lattice, int site, int n);
 #endif
