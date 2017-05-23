@@ -3,11 +3,45 @@
 #include <stdlib.h>
 #include <math.h>
 
-int metropolis(int *lattice, int n, float T, float J, float B) {
-  float E_lattice;
-  E_lattice = energy(lattice, n, J, B);
-  int site = flip(lattice, n, T, J, B);
+int metropolis(int *lattice, int n, float T, float J, float B, float* p_e , float* p_m, double* list) { // esto esta bien?
+  int site = pick_site(lattice, n);
+  double r;
+  float DE = delta_E (lattice, n, site, J, B);
+  int DM = delta_magnet(lattice, site);
+  if (DE <= 0) { // tomo el cambio
+    flip(lattice, n, site);
+    *p_e += DE;
+    *p_m += DM;
+    printf("FLIP sitio = %i con un DE = %f \n", site, DE);
+  }
+  else {
+    r = (((double)rand())/RAND_MAX);
+    double prob_exp = probability(lattice[site], DE, J, B, T, list);
+    if (r < prob_exp){
+      flip(lattice, n, site);
+      *p_e += DE;
+      *p_m += DM;
+      printf("FLIP sitio = %i con un DE = %f con una prob = %lf RANDOM = %lf \n ", site, DE, prob_exp, r);
+    }
+    else {
+    printf("NO flip sitio = %i con un DE = %f con una prob = %lf RANDOM = %lf \n", site, DE, prob_exp, r);  
+    }
+  }
   return 0;
+}
+
+int magnet(int *lattice, int n){
+  int i;
+  int M = 0;
+  for (i = 0; i < n*n; i++) {
+    M += lattice[i];
+  }
+  return M;
+}
+
+int delta_magnet(int *lattice, int site){
+  int DM;
+  DM = -2*lattice[site];
 }
 
 float delta_E (int *lattice, int n, int site, float J, float B){
@@ -27,44 +61,6 @@ float delta_E (int *lattice, int n, int site, float J, float B){
   DE = J*2*lattice[site]*sum_neigh + 2*B*lattice[site];
   return DE;
 }
-
-int sum_E (int *lattice, int selected, int right, int down) {
-  int sum = 0;
-  // caso: todos iguales
-  if (lattice[selected] == lattice[right] && lattice[selected] == lattice[down]){
-    sum = 2;
-  }
-  // caso: uno distinto
-  else if ( (lattice[selected] == lattice[right] && lattice[selected] != lattice[down]) || (lattice[selected] != lattice[right] && lattice[selected] == lattice[down])){
-    sum = 0;
-  }
-  // caso: todos distintos
-  // (esto en principio podria ser un else en lugar de un else if porque cubrimos todos los casos)
-  else if (lattice[selected] != lattice[right] && lattice[selected] != lattice[down]){
-    sum = -2;
-  }
-  return sum;
-}
-
-
-int sum_E_version2 (int *lattice, int n, int idx){
-  // filas
-  int i = idx/n;
-  //columnas
-  int j = idx%n;
-
-  int up, down, right, left, sum;
-
-  // hacer este cambio evitaria tantos "if andentro de for"
-  up = lattice[((i-1+n)%n)*n+j];
-  down = lattice[j+((i+1+n)%n)*n];
-  right = lattice[((j+1+n)%n)+i*n];
-  left = lattice[((j-1+n)%n)+i*n];
-  sum = up + down + right + left;
-
-}
-
-// en principio anda bien...
 
 // calcula energia del lattice
 float energy(int *lattice, int n, float J, float B) {
@@ -88,10 +84,7 @@ float energy(int *lattice, int n, float J, float B) {
   return E;
 }
 
-int pick_site(int *lattice, int n, int idx) {
-  // este metodo segun gille "no es uniforme"
-  // int r = rand()%(n*n);
-  // habria que hacer algo asi:
+int pick_site(int *lattice, int n) {
   int r;
   r = (int)(((float)rand()/RAND_MAX) * (n*n));
   return r;
@@ -102,8 +95,7 @@ int list_exp(double *list, float T, float J, float B){
   double DE;
   for (i = 0; i < 5; i++) {
     DE = (double)(2*(J*(i*2-4)+B));
-    list[i] = exp(-(DE/T)); //el xp de verdad
-    printf("estoy haciendo exp de esta delta_E %.2lf y me da %.2lf\n", DE, list[i]);
+    list[i] = exp(-(DE/T)); //el exp de verdad
   }
   return 0;
 }
@@ -112,13 +104,10 @@ double probability(int spin, float DE, float J, float B, float T, double *list){
   int index;
   // ***no hay posibilidad de que se pisen para distintos J y B??
   index = ((int)((DE/(2)-B)/J) + 4)/2; // ** le sacamos el spin??
-  printf("con esta DE %.2f doy este indice %i\n",DE, index);
   double p = (list[index]); // *** SI NO FUNICONA MIRAR ACA Y EN LOS DOUBLE
   return p;
 }
 
-int flip(int *lattice, int n, float T, float J, float B) {
-  int site = pick_site(lattice, n, 0);
-  float DE = delta_E(lattice, n, site, J, B);
-  return 0;
+int flip(int *lattice, int n, int site) {
+  lattice[site] = -lattice[site];
 }
