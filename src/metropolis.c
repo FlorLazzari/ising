@@ -2,19 +2,19 @@
 #include <time.h>
 #include <stdlib.h>
 
-int metropolis(int *lattice, int n, float T) {
-  int E_lattice;
-  E_lattice = energy(lattice, n);
-  int site = flip(lattice, n, T);
+int metropolis(int *lattice, int n, float T, float J, float B) {
+  float E_lattice;
+  E_lattice = energy(lattice, n, J, B);
+  int site = flip(lattice, n, T, J, B);
   return 0;
 }
 
-int delta_E (int *lattice, int n, int site){
+float delta_E (int *lattice, int n, int site, float J, float B){
   int DE = 0;
   int sum_neigh = 0;
   int i, j;
   j = site%n;
-  i = (site - j)/n; // ****funciona usar site/n ?
+  i = site/n; // ****funciona usar site/n ?
 
   int up, right, down, left;
   up = ((i-1+n)%n)*n+j;
@@ -23,7 +23,7 @@ int delta_E (int *lattice, int n, int site){
   left = ((j-1+n)%n)+i*n;
 
   sum_neigh = lattice[right] + lattice[down] + lattice[left] + lattice[up];
-  DE = -2*lattice[site]*sum_neigh;
+  DE = J*2*lattice[site]*sum_neigh + 2*B*lattice[site];
   return DE;
 }
 
@@ -66,12 +66,12 @@ int sum_E_version2 (int *lattice, int n, int idx){
 // en principio anda bien...
 
 // calcula energia del lattice
-int energy(int *lattice, int n) {
+float energy(int *lattice, int n, float J, float B) {
   int i, j;
   int down;
   int right;
   int selected;
-  int E = 0;
+  float E = 0;
 
 	for (i=0; i<n; i++){ // recorre filas
 		for (j=0; j<n; j++){ // recorre columnas
@@ -81,7 +81,7 @@ int energy(int *lattice, int n) {
 
       // ver si se puede mejorar el sum_E, abajo otra solucion
       //E += sum_E(lattice, selected, right, down);
-      E += lattice[selected]*(lattice[right]+lattice[down]);
+      E += (-J)*lattice[selected]*(lattice[right]+lattice[down]) - B*lattice[selected];
     }
   }
   return E;
@@ -96,8 +96,8 @@ int pick_site(int *lattice, int n, int idx) {
   return r;
 }
 
-int flip(int *lattice, int n, float T) {
+int flip(int *lattice, int n, float T, float J, float B) {
   int site = pick_site(lattice, n, 0);
-  int DE = delta_E(lattice, n, site);
+  float DE = delta_E(lattice, n, site, J, B);
   return 0;
 }

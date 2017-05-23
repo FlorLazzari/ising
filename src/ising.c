@@ -12,13 +12,13 @@ int main(int argc, char **argv) {
   int niter = 2000;
   srand(time(NULL));
   fill_lattice(lattice, n, prob);
-
+  float J = 1.5, B = 1;
   // metropolis(lattice, n, T);
   int idx = 0; // ALERTA!!! (ESTO ES TURBIO)
   int site = pick_site(lattice, n, idx);
   // flip(lattice, int n, float T);
-  int DE = delta_E (lattice, n, site);
-  int E = energy(lattice, n);
+  int DE = delta_E (lattice, n, site, J, B);
+  int E = energy(lattice, n, J, B);
 
 
   // for (int i = 0; i < niter; i++) {
