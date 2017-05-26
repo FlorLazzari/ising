@@ -2,11 +2,12 @@
 - pick_site
 - energy (tiene B y J)
 -delta_E (tiene B y J)
-
-~~~Funciones para terminar~~~
 -flip site
--sum_E
 -metropolis
 
+~~~Para hacer~~~
+-ver bien el tiempo de termalizacion (aprox 2000)
+-autocorrelacion y su tiempo de descorrelacion
+-promedios post-descorrelacion
 
 
