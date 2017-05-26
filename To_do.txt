@@ -6,8 +6,8 @@
 -metropolis
 
 ~~~Para hacer~~~
--ver bien el tiempo de termalizacion (aprox 2000)
--autocorrelacion y su tiempo de descorrelacion
--promedios post-descorrelacion
+-ver bien el tiempo de termalizacion (aprox 2000) (en principio depende de la temp)
+-autocorrelacion y su tiempo de descorrelacion (masomenos hecha, ver el segundo promediado?)
+-promedios post-descorrelacion (falta todo)
 
 
