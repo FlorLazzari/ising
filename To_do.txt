@@ -7,7 +7,8 @@
 
 ~~~Para hacer~~~
 -ver bien el tiempo de termalizacion (aprox 2000) (en principio depende de la temp)
--autocorrelacion y su tiempo de descorrelacion (masomenos hecha, ver el segundo promediado?)
--promedios post-descorrelacion (falta todo)
-
+-autocorrelacion y su tiempo de descorrelacion (masomenos hecha, hecho tambien el segundo promediado entre las rho,
+pero ver que en los graficos se van todas a cero al final del intervalo, shady af)
+-promedios post-descorrelacion (en principio hechos, seleccionar bien un tiempo de descorrelacion)
+-corrida con muuuuchos datos, para ver bien el tiempo de descorrelacion y posteriores promedios (n_iter ~ 50-100k?)
 
