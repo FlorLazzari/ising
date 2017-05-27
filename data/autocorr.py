@@ -77,25 +77,20 @@ plt.show()
 
 #%% Autocorrelacion
 
-N = 1000
-tiempo_auto = int(n_iter - tiempo_term - 2*N) # asegurarme de que sea par?
-t_rho = np.arange(tiempo_auto)
-rho = np.zeros((tiempo_auto, range_temp))
-
-#
-# def autocorr(x):
-#     result = np.correlate(x, x, mode='full')
-#     return result[result.size/2:]
-
+N = n_iter - tiempo_term
+t_rho = np.arange(N)
+rho = np.zeros((N, range_temp))
 
 #por ahora para Magnetizacion
 for i in range(range_temp):
-    for k in range(1,tiempo_auto):
+    for k in range(1,N):
         # el indice falopa es para evitar cosas como m[:0]
-        rho[k-1,i] = np.mean(m[:N,i]*m[k:N+k,i])/np.mean(m[:N+k,i]**2) # ***revisar biennnnn!!!!
+        rho[k-1,i] = np.sum(m[:N-k,i]*m[k:,i])/np.sum(m[:,i]**2)
+         # esta es la que va, el tema era el mean en lugar del sum, porque los
+         # arrays no tenian la misma longitud
+
 
 #%% Graficar autocorr
-
 plt.figure()
 for temp in range(10):
     plt.plot(t_rho, rho[:,temp], label = 'T = {:.2f}'.format(temperatura[temp]))
