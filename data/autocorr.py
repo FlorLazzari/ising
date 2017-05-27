@@ -2,9 +2,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-datos = np.loadtxt("datos_magnet_energy_n50_10k.csv", delimiter = ',', skiprows=1)
+datos = np.loadtxt("datos_magnet_energy_n30_5k.csv", delimiter = ',', skiprows=1)
 
-n_iter = 100000 # cantidad de iteraciones para cada temperatura (de ising.c)
+n_iter = 50000 # cantidad de iteraciones para cada temperatura (de ising.c)
 tiempo_term = 10000 #estimado del tiempo de termalizacion (a ojo)
 range_temp = 10 #cantidad de temperaturas
 temperatura = np.arange(0.4,4.4,0.4)
@@ -52,10 +52,11 @@ plt.ylabel('energia')
 plt.legend()
 plt.title('Energia en el tiempo')
 
-plt.tight_layout()
 plt.show()
 
 #%% Graficar Fluctuaciones (m y e)
+
+plt.figure()
 
 for temp in range(10):
     plt.subplot(1,2,1)
@@ -79,7 +80,6 @@ plt.ylabel('energia')
 plt.legend()
 plt.title('Fluctuaciones de energia en el tiempo')
 
-plt.tight_layout()
 plt.show()
 
 #%% Autocorrelacion
@@ -97,32 +97,6 @@ for i in range(range_temp):
          # esta es la que va, el tema era el mean en lugar del sum, porque los
          # arrays no tenian la misma longitud
 
-#%% Autocorrelacion por intervalos y su promedio
-
-# intento ahora partir el intervalo de tiempo en particiones, y calcular rho
-# en cada uno, para después promediarlos.
-
-particiones = 5
-n_part = int(N/particiones)
-t_rho_prom = np.arange(n_part)
-rho_part_m = np.zeros((n_part, particiones, range_temp))
-rho_part_e = np.zeros((n_part, particiones, range_temp))
-
-# para cada temperatura, y para cada particion calculo la rho como antes.
-# el tema es ajustar los bordes de cada particion con el indice j
-# el N sería acá n_prom, y 
-for i in range(range_temp):
-    for j in range(particiones):
-        for k in range(1,n_part):
-            
-            rho_part_m[k-1,j,i] = np.sum(m[j*n_part : (j+1)*n_part-k ,i] * 
-                      m[j*n_part + k : (j+1)*n_part ,i]) / np.sum(m[j*n_part : (j+1)*n_part ,i]**2)
-
-            rho_part_e[k-1,j,i] = np.sum(e[j*n_part : (j+1)*n_part-k ,i] * 
-                      e[j*n_part + k : (j+1)*n_part ,i]) / np.sum(e[j*n_part : (j+1)*n_part ,i]**2)
-            
-rho_prom_m = np.mean(rho_part_m,1)            
-rho_prom_e = np.mean(rho_part_e,1) 
 
 #%% Graficar autocorr
 
@@ -149,6 +123,34 @@ plt.xlabel('Tiempo')
 plt.ylabel('Autocorrelacion (en)')
 
 plt.show()
+
+
+#%% Autocorrelacion por intervalos y su promedio
+
+# intento ahora partir el intervalo de tiempo en particiones, y calcular rho
+# en cada uno, para después promediarlos.
+
+particiones = 2
+n_part = int(N/particiones)
+t_rho_prom = np.arange(n_part)
+rho_part_m = np.zeros((n_part, particiones, range_temp))
+rho_part_e = np.zeros((n_part, particiones, range_temp))
+
+# para cada temperatura, y para cada particion calculo la rho como antes.
+# el tema es ajustar los bordes de cada particion con el indice j
+# el N sería acá n_prom, y 
+for i in range(range_temp):
+    for j in range(particiones):
+        for k in range(1,n_part):
+            
+            rho_part_m[k-1,j,i] = np.sum(m[j*n_part : (j+1)*n_part-k ,i] * 
+                      m[j*n_part + k : (j+1)*n_part ,i]) / np.sum(m[j*n_part : (j+1)*n_part ,i]**2)
+
+            rho_part_e[k-1,j,i] = np.sum(e[j*n_part : (j+1)*n_part-k ,i] * 
+                      e[j*n_part + k : (j+1)*n_part ,i]) / np.sum(e[j*n_part : (j+1)*n_part ,i]**2)
+            
+rho_prom_m = np.mean(rho_part_m,1)            
+rho_prom_e = np.mean(rho_part_e,1) 
 
 
 #%% Graficar autocorr promediada
@@ -182,13 +184,15 @@ plt.show()
 
 #%% Promedios de mag y en post-correlacion
 
-tiempo_descorr = 10000 # ver de donde sale (se cuenta desde tiempo_term, del grafico de rho)
+tiempo_descorr = 15000 # ver de donde sale (se cuenta desde tiempo_term, del grafico de rho)
 mag_posta = magnet[tiempo_descorr:, :]
 en_posta = energy[tiempo_descorr:, :]
-mag_avg = np.mean(mag_posta,0)
+mag_avg = np.mean(np.abs(mag_posta),0)
 en_avg = np.mean(en_posta,0)
 
 #%% Graficar E y M en temperatura
+
+# M parece dar mal, pero la E masomenos bien? Ver Pathria 3rd ed. p.498
 
 plt.figure()
 plt.subplot(2,1,1)
