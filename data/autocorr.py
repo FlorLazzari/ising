@@ -2,9 +2,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-datos = np.loadtxt("datos_magnet_energy.csv", delimiter = ',', skiprows=1)
+datos = np.loadtxt("datos_magnet_energy_n50_10k.csv", delimiter = ',', skiprows=1)
 
-n_iter = 20000 # cantidad de iteraciones para cada temperatura (de ising.c)
+n_iter = 100000 # cantidad de iteraciones para cada temperatura (de ising.c)
 tiempo_term = 10000 #estimado del tiempo de termalizacion (a ojo)
 range_temp = 10 #cantidad de temperaturas
 temperatura = np.arange(0.4,4.4,0.4)
@@ -27,7 +27,7 @@ for i in range(range_temp):
     m[:,i] = magnet[:,i] - np.mean(magnet[:,i])
     e[:,i] = energy[:,i] - np.mean(energy[:,i])
 
-#%% Graficar m y e
+#%% Graficar magnetizacion y energia (sin cortar termalizacion)
 
 plt.figure()
 
@@ -55,7 +55,7 @@ plt.title('Energia en el tiempo')
 plt.tight_layout()
 plt.show()
 
-#%% Graficar Fluctuaciones
+#%% Graficar Fluctuaciones (m y e)
 
 for temp in range(10):
     plt.subplot(1,2,1)
@@ -182,7 +182,7 @@ plt.show()
 
 #%% Promedios de mag y en post-correlacion
 
-tiempo_descorr = 1000 # ver de donde sale (se cuenta desde tiempo_term, del grafico de rho)
+tiempo_descorr = 10000 # ver de donde sale (se cuenta desde tiempo_term, del grafico de rho)
 mag_posta = magnet[tiempo_descorr:, :]
 en_posta = energy[tiempo_descorr:, :]
 mag_avg = np.mean(mag_posta,0)
