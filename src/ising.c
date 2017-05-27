@@ -7,14 +7,14 @@
 
 int main(int argc, char **argv) {
   FILE *fdat;
-  fdat = fopen("datos_magnet_energy.csv", "w");
+  fdat = fopen("datos_magnet_energy_n30_5k.csv", "w");
   fprintf(fdat, "i    M    E    T\n");
-  int n = 20;
+  int n = 30;
   int *lattice = malloc(n * n * sizeof(int));
   double *list = malloc(5* sizeof(double));
   float prob = 0.5;
   float T = 0, J = 1, B = 0;
-  int niter = 20000;
+  int niter = 50000;
   srand(time(NULL));
 
   for (int j=0; j < 10; j++){
