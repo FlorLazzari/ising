@@ -7,9 +7,9 @@
 
 int main(int argc, char **argv) {
   FILE *fdat;
-  fdat = fopen("datos_magnet_energy_n30_5k.csv", "w");
+  fdat = fopen("datos_magnet_energy_n100_50k.csv", "w");
   fprintf(fdat, "i    M    E    T\n");
-  int n = 30;
+  int n = 100;
   int *lattice = malloc(n * n * sizeof(int));
   double *list = malloc(5* sizeof(double));
   float prob = 0.5;
