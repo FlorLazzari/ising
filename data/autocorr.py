@@ -2,10 +2,10 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-datos = np.loadtxt("datos_magnet_energy_n100_50k.csv", delimiter = ',', skiprows=1)
+datos = np.loadtxt("datos_magnet_energy_n100_150k.csv", delimiter = ',', skiprows=1)
 
-n_iter = 50000 # cantidad de iteraciones para cada temperatura (de ising.c)
-tiempo_term = 10000 #estimado del tiempo de termalizacion (a ojo)
+n_iter = 150 * 1000 # cantidad de iteraciones para cada temperatura (de ising.c)
+tiempo_term = 100 * 1000 #estimado del tiempo de termalizacion (a ojo)
 range_temp = 10 #cantidad de temperaturas
 temperatura = np.arange(0.4,4.4,0.4)
 
@@ -236,6 +236,46 @@ plt.xlabel('Temperatura')
 plt.ylabel('energia')
 #plt.legend()
 plt.title('Energia en funcion de la temperatura')
+
+plt.tight_layout()
+plt.show()
+
+#%% Magnetizacion y energia por intervalos y promediadas
+
+particiones_mage = 5
+n_part_mage = int((n_iter - tiempo_descorr - tiempo_term)/particiones_mage)
+t_mage_prom = np.arange(n_part)
+mag_part_posta = np.zeros((n_part_mage, particiones_mage, range_temp))
+en_part_posta = np.zeros((n_part_mage, particiones_mage, range_temp))
+
+for i in range(range_temp):
+    for j in range(particiones_mage):
+        mag_part_posta[:,j,i] = magnet[j*n_part_mage : (j+1)*n_part_mage,i]
+        en_part_posta[:,j,i] = energy[j*n_part_mage : (j+1)*n_part_mage,i]
+        
+mag_part_avg = np.mean(np.mean(np.abs(mag_part_posta),1),0)            
+en_part_avg = np.mean(np.mean(en_part_posta,1),0)
+        
+
+#%% Graficar E y M promediadas por intervalos en temperatura
+
+
+plt.figure()
+plt.subplot(2,1,1)
+plt.plot(temperatura, mag_part_avg)
+plt.grid(True)
+plt.xlabel('Temperatura')
+plt.ylabel('magnetizacion')
+plt.title('Magnetizacion promediada en intervalos en funcion de la temperatura')
+#plt.legend()
+
+plt.subplot(2,1,2)
+plt.plot(temperatura, en_part_avg)
+plt.grid(True)
+plt.xlabel('Temperatura')
+plt.ylabel('energia')
+#plt.legend()
+plt.title('Energia promediada en intervalos en funcion de la temperatura')
 
 plt.tight_layout()
 plt.show()
