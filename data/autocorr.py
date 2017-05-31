@@ -2,10 +2,10 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-datos = np.loadtxt("datos_magnet_energy_n100_150k.csv", delimiter = ',', skiprows=1)
+datos = np.loadtxt("datos_magnet_energy_n32_300k_B00001.csv", delimiter = ',', skiprows=1)
 
-n_iter = 150 * 1000 # cantidad de iteraciones para cada temperatura (de ising.c)
-tiempo_term = 100 * 1000 #estimado del tiempo de termalizacion (a ojo)
+n_iter = 50 * 1000 # cantidad de iteraciones para cada temperatura (de ising.c)
+tiempo_term = 10 * 1000 #estimado del tiempo de termalizacion (a ojo)
 range_temp = 10 #cantidad de temperaturas
 temperatura = np.arange(0.4,4.4,0.4)
 
@@ -113,7 +113,8 @@ def autocorr(x):
     result = np.correlate(x, x, mode='full')/np.sum(x**2)
     return result[result.size//2:]
 
-for i in range(range_temp):
+#for i in range(range_temp):
+for i in [0,5,9]:
     rho_m[:,i] = autocorr(m[:,i])
     rho_e[:,i] = autocorr(e[:,i])
 
@@ -121,7 +122,8 @@ for i in range(range_temp):
 #%% Graficar autocorr
 
 plt.figure()
-for temp in range(10):
+#for temp in range(10):
+for temp in [0,5,9]:
     plt.subplot(1,2,1)
     plt.plot(t_rho, rho_m[:,temp], label = 'T = {:.2f}'.format(temperatura[temp]))
     
@@ -150,7 +152,7 @@ plt.show()
 # intento ahora partir el intervalo de tiempo en particiones, y calcular rho
 # en cada uno, para después promediarlos.
 
-particiones = 2
+particiones = 100
 n_part = int(N/particiones)
 t_rho_prom = np.arange(n_part)
 rho_part_m = np.zeros((n_part, particiones, range_temp))
@@ -170,7 +172,8 @@ rho_part_e = np.zeros((n_part, particiones, range_temp))
 #            rho_part_e[k-1,j,i] = np.sum(e[j*n_part : (j+1)*n_part-k ,i] * 
 #                      e[j*n_part + k : (j+1)*n_part ,i]) / np.sum(e[j*n_part : (j+1)*n_part ,i]**2)
 
-for i in range(range_temp):
+#for i in range(range_temp):
+for i in [0,5,9]:
     for j in range(particiones):
         rho_part_m[:,j,i] = autocorr(m[j*n_part : (j+1)*n_part,i])
         rho_part_e[:,j,i] = autocorr(e[j*n_part : (j+1)*n_part,i])
@@ -185,7 +188,8 @@ rho_prom_e = np.mean(rho_part_e,1)
 # decaen a cero posta al final del intervalo, corte que medio turbiooo
 
 plt.figure()
-for temp in range(10):
+#for temp in range(10):
+for temp in [0,5,9]:
     plt.subplot(1,2,1)
     plt.plot(t_rho_prom, rho_prom_m[:,temp], label = 'T = {:.2f}'.format(temperatura[temp]))
     
@@ -210,10 +214,15 @@ plt.show()
 
 #%% Promedios de mag y en post-correlacion
 
-tiempo_descorr = 20000 # ver de donde sale (se cuenta desde tiempo_term, del grafico de rho)
-mag_posta = magnet[tiempo_descorr:, :]
-en_posta = energy[tiempo_descorr:, :]
-mag_avg = np.mean(np.abs(mag_posta),0)
+tiempo_descorr = 15000 # ver de donde sale (se cuenta desde tiempo_term, del grafico de rho)
+samples = int((n_iter - tiempo_term)/tiempo_descorr) 
+mag_posta = np.zeros((samples,range_temp))
+en_posta = np.zeros((samples,range_temp))
+
+for i in range(samples):
+    mag_posta[i,:] = magnet[i*tiempo_descorr,:]
+    en_posta[i,:] = energy[i,:]
+mag_avg = np.abs(np.mean(mag_posta,0))
 en_avg = np.mean(en_posta,0)
 
 #%% Graficar E y M en temperatura

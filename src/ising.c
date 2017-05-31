@@ -6,21 +6,21 @@
 
 
 int main(int argc, char **argv) {
-  FILE *fdat;
-  fdat = fopen("datos_magnet_energy_n100_150k.csv", "w");
-  fprintf(fdat, "i    M    E    T\n");
-  int n = 100;
+  /*FILE *fdat;
+  fdat = fopen("datos_magnet_energy_n32_300k_B00001.csv", "w");
+  fprintf(fdat, "i    M    E    T\n");*/
+  int n = 3;
   int *lattice = malloc(n * n * sizeof(int));
   double *list = malloc(5* sizeof(double));
   float prob = 0.5;
   float T = 0, J = 1, B = 0;
-  int niter = 150000;
+  int niter = 5;
   srand(time(NULL));
 
   for (int j=0; j < 10; j++){
 
     T = 0.4 + (4.0/10)*j;
-
+    B = 0.0001;
     fill_lattice(lattice, n, prob);
     list_exp(list, T, J, B);
 
@@ -33,12 +33,12 @@ int main(int argc, char **argv) {
 
     for (int i = 0; i < niter; i++) {
       metropolis(lattice, n, T, J, B, p_e, p_m, list);
-      // print_lattice(lattice, n);
+       print_lattice(lattice, n);
       energy_array[i] = *p_e;
       magnet_array[i] = *p_m;
       // printf("ARRAY MAG = %f\n", magnet_array[i]);
-      // printf("ARRAY ENERGIA = %f\n", energy_array[i]);
-  	  fprintf(fdat, "%i,%3.6g,%3.3g,%3.3g \n",i, magnet_array[i], energy_array[i],T);
+      printf("ARRAY ENERGIA = %f\n", energy_array[i]);
+  	  //fprintf(fdat, "%i,%3.6g,%3.3g,%3.3g \n",i, magnet_array[i], energy_array[i],T);
     }
   }
   return 0;

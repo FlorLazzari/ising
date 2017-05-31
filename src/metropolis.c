@@ -77,7 +77,7 @@ float energy(int *lattice, int n, float J, float B) {
 
       // ver si se puede mejorar el sum_E, abajo otra solucion
       //E += sum_E(lattice, selected, right, down);
-      E += (-J)*lattice[selected]*(lattice[right]+lattice[down]) - B*lattice[selected];
+      E += ( (-J)*lattice[selected]*(lattice[right]+lattice[down]) - B*lattice[selected]);
     }
   }
   return E;
