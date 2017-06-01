@@ -7,7 +7,7 @@
 
 int main(int argc, char **argv) {
   FILE *fdat;
-  fdat = fopen("datos_sampleo_n32_1k.csv", "w");
+  fdat = fopen("datos_sampleo_n32_3k.csv", "w");
   fprintf(fdat, "i    M    E    T\n");
   int n = 32;
   int *lattice = malloc(n * n * sizeof(int));
@@ -16,7 +16,7 @@ int main(int argc, char **argv) {
   float T = 0, J = 1, B = 0;
   int n_term = 15000;
   int n_corr = 15000;
-  int n_iter = 1000*n_corr;
+  int n_iter = 2000*n_corr;
   srand(time(NULL));
 
   for (int j=0; j < 10; j++){
@@ -56,6 +56,7 @@ int main(int argc, char **argv) {
         printf("dato tomado para T = %.2f, i = %i de %i\n", T, i/n_corr, n_iter/n_corr);
       }
     }
+    //free(lattice);
   }
   return 0;
 }
