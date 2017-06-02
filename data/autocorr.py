@@ -4,6 +4,9 @@ import matplotlib.pyplot as plt
 
 datos = np.loadtxt("datos_magnet_energy_n32_300k_B00001.csv", delimiter = ',', skiprows=1)
 
+
+# habria que cambiar el n_iter del ising.c a un numero mas grande, segun guille
+# para 50000 iteraciones todavia no termalizo
 n_iter = 50 * 1000 # cantidad de iteraciones para cada temperatura (de ising.c)
 tiempo_term = 10 * 1000 #estimado del tiempo de termalizacion (a ojo)
 range_temp = 10 #cantidad de temperaturas
@@ -20,7 +23,7 @@ e = np.zeros((n_iter - tiempo_term, range_temp))
 
 # separa los datos en columnas segun la temperatura
 for i in range(range_temp):
-    t[:,i] = datos[tiempo_term + i*n_iter : (i+1)*n_iter, 0]
+    t[:,i] = datos[tiempo_term : n_iter, 0]    #para todos va a ser el mismo tiempo
     magnet[:,i] = datos[tiempo_term + i*n_iter : (i+1)*n_iter,1]
     energy[:,i] = datos[tiempo_term + i*n_iter : (i+1)*n_iter,2]
     # estos dos son para la autocorrelacion (resto el offset)
@@ -29,14 +32,15 @@ for i in range(range_temp):
 
 #%% Graficar magnetizacion y energia (sin cortar termalizacion)
 
+# [i*n_iter : (i+1)*n_iter,0]
 plt.figure()
 
 for i in range(10):
     plt.subplot(1,2,1)
-    plt.plot(datos[i*n_iter : (i+1)*n_iter, 0], datos[i*n_iter : (i+1)*n_iter,1], label = 'T = {:.2f}'.format(temperatura[i]))
+    plt.plot(datos[0 : n_iter, 0], datos[i*n_iter : (i+1)*n_iter,1], label = 'T = {:.2f}'.format(temperatura[i]))
 
     plt.subplot(1,2,2)
-    plt.plot(datos[i*n_iter : (i+1)*n_iter,0], datos[i*n_iter : (i+1)*n_iter,2], label = 'T = {:.2f}'.format(temperatura[i]))
+    plt.plot(datos[0 : n_iter, 0], datos[i*n_iter : (i+1)*n_iter,2], label = 'T = {:.2f}'.format(temperatura[i]))
 
 plt.subplot(1,2,1)
 plt.grid(True)
@@ -105,9 +109,9 @@ rho_e = np.zeros((N, range_temp))
 
 def autocorr(x):
     """
-    Usa el np.correlate con ambos argumentos iguales para calcular la 
+    Usa el np.correlate con ambos argumentos iguales para calcular la
     autocorrelacion. El mode es 'full' para tomar bien el intervalo (ver docs
-    de numpy). Como np.correlate considera lags negativos, toma la mitad 
+    de numpy). Como np.correlate considera lags negativos, toma la mitad
     derecha del resultado. Realiza la normalizacion a mano.
     """
     result = np.correlate(x, x, mode='full')/np.sum(x**2)
@@ -126,18 +130,18 @@ plt.figure()
 for temp in [0,5,9]:
     plt.subplot(1,2,1)
     plt.plot(t_rho, rho_m[:,temp], label = 'T = {:.2f}'.format(temperatura[temp]))
-    
+
     plt.subplot(1,2,2)
     plt.plot(t_rho, rho_e[:,temp], label = 'T = {:.2f}'.format(temperatura[temp]))
 
-plt.subplot(1,2,1)    
+plt.subplot(1,2,1)
 plt.legend()
 plt.title('Autocorrelacion de magnetizacion en funcion del tiempo')
 plt.grid(True)
 plt.xlabel('Tiempo')
 plt.ylabel('Autocorrelacion (mag)')
 
-plt.subplot(1,2,2)    
+plt.subplot(1,2,2)
 plt.legend()
 plt.title('Autocorrelacion de energia en funcion del tiempo')
 plt.grid(True)
@@ -160,16 +164,16 @@ rho_part_e = np.zeros((n_part, particiones, range_temp))
 
 # para cada temperatura, y para cada particion calculo la rho como antes.
 # el tema es ajustar los bordes de cada particion con el indice j
-# el N sería acá n_prom, y 
+# el N sería acá n_prom, y
 #for i in range(range_temp):
-#    for j in range(particiones):    
+#    for j in range(particiones):
 #        print('Realizando autocorr (con promediado) para T = %f, partcion %i de %i' % temperatura[i], j, particiones)
 #        for k in range(1,n_part):
-#            
-#            rho_part_m[k-1,j,i] = np.sum(m[j*n_part : (j+1)*n_part-k ,i] * 
+#
+#            rho_part_m[k-1,j,i] = np.sum(m[j*n_part : (j+1)*n_part-k ,i] *
 #                      m[j*n_part + k : (j+1)*n_part ,i]) / np.sum(m[j*n_part : (j+1)*n_part ,i]**2)
 #
-#            rho_part_e[k-1,j,i] = np.sum(e[j*n_part : (j+1)*n_part-k ,i] * 
+#            rho_part_e[k-1,j,i] = np.sum(e[j*n_part : (j+1)*n_part-k ,i] *
 #                      e[j*n_part + k : (j+1)*n_part ,i]) / np.sum(e[j*n_part : (j+1)*n_part ,i]**2)
 
 #for i in range(range_temp):
@@ -177,9 +181,9 @@ for i in [0,5,9]:
     for j in range(particiones):
         rho_part_m[:,j,i] = autocorr(m[j*n_part : (j+1)*n_part,i])
         rho_part_e[:,j,i] = autocorr(e[j*n_part : (j+1)*n_part,i])
-            
-rho_prom_m = np.mean(rho_part_m,1)            
-rho_prom_e = np.mean(rho_part_e,1) 
+
+rho_prom_m = np.mean(rho_part_m,1)
+rho_prom_e = np.mean(rho_part_e,1)
 
 
 #%% Graficar autocorr promediada
@@ -192,18 +196,18 @@ plt.figure()
 for temp in [0,5,9]:
     plt.subplot(1,2,1)
     plt.plot(t_rho_prom, rho_prom_m[:,temp], label = 'T = {:.2f}'.format(temperatura[temp]))
-    
+
     plt.subplot(1,2,2)
     plt.plot(t_rho_prom, rho_prom_e[:,temp], label = 'T = {:.2f}'.format(temperatura[temp]))
 
-plt.subplot(1,2,1)    
+plt.subplot(1,2,1)
 plt.legend()
 plt.title('Autocorrelacion de magnetizacion en funcion del tiempo (promediada)')
 plt.grid(True)
 plt.xlabel('Tiempo')
 plt.ylabel('Autocorrelacion (mag)')
 
-plt.subplot(1,2,2)    
+plt.subplot(1,2,2)
 plt.legend()
 plt.title('Autocorrelacion de energia en funcion del tiempo (promediada)')
 plt.grid(True)
@@ -215,7 +219,7 @@ plt.show()
 #%% Promedios de mag y en post-correlacion
 
 tiempo_descorr = 15000 # ver de donde sale (se cuenta desde tiempo_term, del grafico de rho)
-samples = int((n_iter - tiempo_term)/tiempo_descorr) 
+samples = int((n_iter - tiempo_term)/tiempo_descorr)
 mag_posta = np.zeros((samples,range_temp))
 en_posta = np.zeros((samples,range_temp))
 
@@ -261,10 +265,10 @@ for i in range(range_temp):
     for j in range(particiones_mage):
         mag_part_posta[:,j,i] = magnet[j*n_part_mage : (j+1)*n_part_mage,i]
         en_part_posta[:,j,i] = energy[j*n_part_mage : (j+1)*n_part_mage,i]
-        
-mag_part_avg = np.mean(np.mean(np.abs(mag_part_posta),1),0)            
+
+mag_part_avg = np.mean(np.mean(np.abs(mag_part_posta),1),0)
 en_part_avg = np.mean(np.mean(en_part_posta,1),0)
-        
+
 
 #%% Graficar E y M promediadas por intervalos en temperatura
 
