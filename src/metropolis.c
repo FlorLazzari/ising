@@ -58,6 +58,7 @@ float delta_E (int *lattice, int n, int site, float J, float B){
 
   sum_neigh = lattice[right] + lattice[down] + lattice[left] + lattice[up];
   DE = J*2*lattice[site]*sum_neigh + 2*B*lattice[site];
+  printf("el delta del B es %f\n",2*B*lattice[site] );
   return DE;
 }
 
@@ -77,7 +78,8 @@ float energy(int *lattice, int n, float J, float B) {
 
       // ver si se puede mejorar el sum_E, abajo otra solucion
       //E += sum_E(lattice, selected, right, down);
-      E += ( (-J)*lattice[selected]*(lattice[right]+lattice[down]) - B*lattice[selected]);
+      E += ( (-J)*lattice[selected]*(lattice[right]+lattice[down]) - B*(float)lattice[selected] );
+      printf("el sitio i,j = %i %i contribuye con E = %f \n", i, j, - B*(float)lattice[selected] );
     }
   }
   return E;
