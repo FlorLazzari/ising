@@ -2,11 +2,11 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-samples = np.loadtxt("datos_sampleo_n32_2k.csv", delimiter = ',', skiprows=1)
+samples = np.loadtxt("datos_sampleo_n32_1k_100temps.csv", delimiter = ',', skiprows=1)
 
-n_iter = 2000
-range_temp = 10 #cantidad de temperaturas
-temperatura = np.arange(0.4,4.4,0.4)
+n_iter = 1000
+range_temp = 100 #cantidad de temperaturas
+temperatura = np.linspace(4/range_temp, 4, range_temp)
 
 #%% Obtener mag y en
 

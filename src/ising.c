@@ -7,7 +7,7 @@
 
 int main(int argc, char **argv) {
   FILE *fdat;
-  fdat = fopen("datos_sampleo_n32_3k.csv", "w");
+  fdat = fopen("datos_sampleo_n32_1k_100temps.csv", "w");
   fprintf(fdat, "i    M    E    T\n");
   int n = 32;
   int *lattice = malloc(n * n * sizeof(int));
@@ -16,12 +16,13 @@ int main(int argc, char **argv) {
   float T = 0, J = 1, B = 0;
   int n_term = 15000;
   int n_corr = 15000;
-  int n_iter = 2000*n_corr;
+  int n_iter = 1000*n_corr;
   srand(time(NULL));
 
-  for (int j=0; j < 10; j++){
+  for (int j=0; j < 100; j++){
 
-    T = 0.4 + (4.0/10)*j;
+    //T = 0.4 + (4.0/10)*j; como andaba antes
+    T = 0.04 + (4.0/100)*j;
     //B = 0.0001;
     fill_lattice(lattice, n, prob);
     list_exp(list, T, J, B);
@@ -43,6 +44,7 @@ int main(int argc, char **argv) {
       //printf("ARRAY ENERGIA = %f\n", energy_array[i]);
   	  //fprintf(fdat, "%i,%3.6g,%3.3g,%3.3g \n",i, magnet_array[i], energy_array[i],T);
     }
+
     // ciclo de sampleo, toma datos solo cada tiempo de descorrelacion
     for (int i = 0; i < n_iter; i++) {
       metropolis(lattice, n, T, J, B, p_e, p_m, list);
@@ -57,6 +59,8 @@ int main(int argc, char **argv) {
       }
     }
     //free(lattice);
+    free(energy_array);
+    free(magnet_array);
   }
   return 0;
 }
