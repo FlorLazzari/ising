@@ -7,15 +7,15 @@
 
 int main(int argc, char **argv) {
   FILE *fdat;
-  fdat = fopen("datos_sampleo_n32_100_100temps_reciterm.csv", "w");
+  fdat = fopen("datos_sampleo_n32_100_100temps_reciterm_B001.csv", "w");
   fprintf(fdat, "i    M    E    T\n");
   int n = 32;
   int *lattice = malloc(n * n * sizeof(int));
   double *list = malloc(5* sizeof(double));
   float prob = 0.5;
-  float T = 0, J = 1, B = 0;
+  float T = 0, J = 1, B = 0.01;
   int range_temp = 100;
-  int n_term = 50000;
+  int n_term = 1000000;
   int n_corr = 15000;
   int n_iter = 100*n_corr;
   srand(time(NULL));
