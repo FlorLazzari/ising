@@ -6,20 +6,25 @@
 int metropolis(int *lattice, int n, float T, float J, float B, float* p_e , float* p_m, double* list) { // esto esta bien?
   int site = pick_site(lattice, n);
   double r;
-  float DE = delta_E (lattice, n, site, J, B);
+  float DE = delta_E(lattice, n, site, J, B);
+  printf("el DE de metropolis es %f\n",DE); // me da cero asi que acá falla
   float DM = delta_magnet(lattice, site, n);
   if (DE <= 0) { // tomo el cambio
     flip(lattice, n, site);
+    printf("la energia antes de cambiar es %f\n",*p_e);
     *p_e += DE;
     *p_m += DM;
+    printf("la energia despues del cambio es %f\n",*p_e);
   }
   else {
     r = (((double)rand())/RAND_MAX);
     double prob_exp = probability(lattice[site], DE, J, B, T, list);
     if (r < prob_exp){
       flip(lattice, n, site);
+      printf("la energia antes de cambiar es %f\n",*p_e);
       *p_e += DE;
       *p_m += DM;
+      printf("la energia despues del cambio es %f\n",*p_e);
     }
     else {
     }
@@ -44,7 +49,7 @@ float delta_magnet(int *lattice, int site, int n){
 }
 
 float delta_E (int *lattice, int n, int site, float J, float B){
-  int DE = 0;
+  float DE = 0; //ACA HABIA UN INTTTTTTTT *emoji de kurt cobain*
   int sum_neigh = 0;
   int i, j;
   j = site%n;
@@ -59,6 +64,7 @@ float delta_E (int *lattice, int n, int site, float J, float B){
   sum_neigh = lattice[right] + lattice[down] + lattice[left] + lattice[up];
   DE = J*2*lattice[site]*sum_neigh + 2*B*lattice[site];
   printf("el delta del B es %f\n",2*B*lattice[site] );
+  printf("la delta de energia desde la funcion es %f\n",DE );
   return DE;
 }
 
@@ -79,7 +85,7 @@ float energy(int *lattice, int n, float J, float B) {
       // ver si se puede mejorar el sum_E, abajo otra solucion
       //E += sum_E(lattice, selected, right, down);
       E += ( (-J)*lattice[selected]*(lattice[right]+lattice[down]) - B*(float)lattice[selected] );
-      printf("el sitio i,j = %i %i contribuye con E = %f \n", i, j, - B*(float)lattice[selected] );
+      //printf("el sitio i,j = %i %i contribuye con E = %f \n", i, j, - B*(float)lattice[selected] );
     }
   }
   return E;

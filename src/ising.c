@@ -38,8 +38,8 @@ int main(int argc, char **argv) {
     for (int i = 0; i < n_term; i++) {
       printf("antes de cambiar\n");
       print_lattice(lattice, n);
-      metropolis(lattice, n, T, J, B, p_e, p_m, list);
       printf("cambiado\n");
+      metropolis(lattice, n, T, J, B, p_e, p_m, list);
       print_lattice(lattice, n);
       energy_array[i] = *p_e;
       magnet_array[i] = *p_m;
