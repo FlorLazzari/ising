@@ -2,15 +2,16 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-datos = np.loadtxt("datos_magnet_energy_n32_300k_B00001.csv", delimiter = ',', skiprows=1)
+datos = np.loadtxt("datos_term_prueba_conB.csv", delimiter = ',', skiprows=1)
 
 
 # habria que cambiar el n_iter del ising.c a un numero mas grande, segun guille
 # para 50000 iteraciones todavia no termalizo
-n_iter = 50 * 1000 # cantidad de iteraciones para cada temperatura (de ising.c)
-tiempo_term = 10 * 1000 #estimado del tiempo de termalizacion (a ojo)
+n_iter = 50 * 1000 + 100 # cantidad de iteraciones para cada temperatura (de ising.c)
+tiempo_term = 50 * 1000 #estimado del tiempo de termalizacion (a ojo)
 range_temp = 10 #cantidad de temperaturas
-temperatura = np.arange(0.4,4.4,0.4)
+temp_max = 4
+temperatura = np.linspace(temp_max/range_temp, temp_max, range_temp)
 
 #%% Organizar datos
 
@@ -35,7 +36,7 @@ for i in range(range_temp):
 # [i*n_iter : (i+1)*n_iter,0]
 plt.figure()
 
-for i in range(10):
+for i in range(range_temp):
     plt.subplot(1,2,1)
     plt.plot(datos[0 : n_iter, 0], datos[i*n_iter : (i+1)*n_iter,1], label = 'T = {:.2f}'.format(temperatura[i]))
 
@@ -62,7 +63,7 @@ plt.show()
 
 plt.figure()
 
-for temp in range(10):
+for temp in range(range_temp):
     plt.subplot(1,2,1)
     plt.plot(t[:,temp], m[:,temp], label = 'T = {:.2f}'.format(temperatura[temp]))
 
