@@ -2,11 +2,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-# este en windows
-datos = np.loadtxt(r"pruebas\datos_term_prueba_conB.csv", delimiter = ',', skiprows=1)
-
-# este en linux
-#datos = np.loadtxt("pruebas/datos_term_prueba_conB.csv", delimiter = ',', skiprows=1)
+datos = np.loadtxt("datos_term_prueba_conB.csv", delimiter = ',', skiprows=1)
 
 
 # habria que cambiar el n_iter del ising.c a un numero mas grande, segun guille
