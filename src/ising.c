@@ -7,13 +7,13 @@
 
 int main(int argc, char **argv) {
   FILE *fdat;
-  fdat = fopen("termalizacion_n32_J02_300k.csv", "w");
+  fdat = fopen("termalizacion_n32_J04_300k.csv", "w");
   fprintf(fdat, "i    M    E    T\n");
   int n = 32;
   int *lattice = malloc(n * n * sizeof(int));
   double *list = malloc(5* sizeof(double));
   float prob = 0.5;
-  float T = 0, J = 0.2, B = 0;
+  float T = 0, J = 0.4, B = 0;
   int range_temp = 10;
   int n_term = 300000;
   int n_corr = 15000;
