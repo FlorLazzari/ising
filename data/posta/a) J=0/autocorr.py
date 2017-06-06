@@ -9,7 +9,7 @@ datos = np.loadtxt("datos_term_prueba_conB.csv", delimiter = ',', skiprows=1)
 # para 50000 iteraciones todavia no termalizo
 n_iter = 50 * 1000 + 100 # cantidad de iteraciones para cada temperatura (de ising.c)
 tiempo_term = 50 * 1000 #estimado del tiempo de termalizacion (a ojo)
-range_temp = 100 #cantidad de temperaturas
+range_temp = 10 #cantidad de temperaturas
 temp_max = 4
 temperatura = np.linspace(temp_max/range_temp, temp_max, range_temp)
 
@@ -219,10 +219,3 @@ plt.xlabel('Tiempo')
 plt.ylabel('Autocorrelacion (en)')
 
 plt.show()
-
-
-
-
-
-
-
