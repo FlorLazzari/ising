@@ -18,13 +18,14 @@ int main(int argc, char **argv) {
   int n_term = 300000;
   int n_corr = 15000;
   int n_iter = 100*n_corr;
+  float T_max = 2.6;
   srand(time(NULL));
 
   fill_lattice(lattice, n, prob); // lo hago una unica vez para reciclar el termalizado para la proxima T
   for (int j=0; j < range_temp; j++){
 
     //T = 0.4 + (4.0/10)*j; como andaba antes
-    T = (4.0/range_temp)*(j+1);
+    T = (T_max/range_temp)*(j+1);
     //B = 0.0;
     //fill_lattice(lattice, n, prob);
     list_exp(list, T, J, B);

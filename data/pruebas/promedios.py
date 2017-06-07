@@ -2,7 +2,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-samples = np.loadtxt("datos_sampleo_n32_100_100temps_reciterm.csv", delimiter = ',', skiprows=1)
+samples = np.loadtxt("datos_sampleo_n32_100_100temps_reciterm_B001.csv", delimiter = ',', skiprows=1)
 
 n_iter = 100    # cantidad de datos sampleados para cada temperatura
 range_temp = 100 #cantidad de temperaturas

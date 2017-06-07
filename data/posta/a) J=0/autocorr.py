@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
+from __future__ import division
 import numpy as np
 import matplotlib.pyplot as plt
 
 datos = np.loadtxt("datos_term_prueba_conB.csv", delimiter = ',', skiprows=1)
-
+# tiene J =! 0
+# habria que correrlo para J=0 (aca no tenemos el problema con el B)
 
 # habria que cambiar el n_iter del ising.c a un numero mas grande, segun guille
 # para 50000 iteraciones todavia no termalizo

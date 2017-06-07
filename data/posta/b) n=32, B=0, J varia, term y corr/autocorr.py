@@ -1,16 +1,17 @@
 # -*- coding: utf-8 -*-
+from __future__ import division
 import numpy as np
 import matplotlib.pyplot as plt
 
-datos = np.loadtxt("termalizacion_n32_J01_300k.csv", delimiter = ',', skiprows=1)
+datos = np.loadtxt("termalizacion_n32_J02_300k_Tmax08.csv", delimiter = ',', skiprows=1)
 
 
 # habria que cambiar el n_iter del ising.c a un numero mas grande, segun guille
 # para 50000 iteraciones todavia no termalizo
-n_iter = 50 * 1000 + 100 # cantidad de iteraciones para cada temperatura (de ising.c)
+n_iter = 300 * 1000 # cantidad de iteraciones para cada temperatura (de ising.c)
 tiempo_term = 50 * 1000 #estimado del tiempo de termalizacion (a ojo)
 range_temp = 10 #cantidad de temperaturas
-temp_max = 4
+temp_max = 0.8
 temperatura = np.linspace(temp_max/range_temp, temp_max, range_temp)
 
 
