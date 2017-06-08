@@ -7,15 +7,15 @@
 
 int main(int argc, char **argv) {
   FILE *fdat;
-  fdat = fopen("termalizacion_n32_J06_300k.csv", "w");
+  fdat = fopen("sampleo_n32_1k_B1.csv", "w");
   fprintf(fdat, "i    M    E    T\n");
   int n = 32;
   int *lattice = malloc(n * n * sizeof(int));
   double *list = malloc(5* sizeof(double));
   float prob = 0.5;
-  float T = 0, J = 0.6, B = 0;
-  int range_temp = 10;
-  int n_term = 300000;
+  float T = 0, J = 0, B = 1;
+  int range_temp = 100;
+  int n_term = 100000;
   int n_corr = 15000;
   int n_iter = 100*n_corr;
   float T_max = 2.6;
@@ -48,23 +48,23 @@ int main(int argc, char **argv) {
       magnet_array[i] = *p_m;
       // printf("ARRAY MAG = %f\n", magnet_array[i]);
       //printf("ARRAY ENERGIA = %f\n", energy_array[i]);
-  	  fprintf(fdat, "%i,%3.6g,%3.3g,%3.3g \n",i, magnet_array[i], energy_array[i],T);
-      printf("dato tomado para T = %.2f, i = %i de %i\n", T, i, n_term);
+  	  //fprintf(fdat, "%i,%3.6g,%3.3g,%3.3g \n",i, magnet_array[i], energy_array[i],T);
+      //printf("dato tomado para T = %.2f, i = %i de %i\n", T, i, n_term);
     }
     //
     // // ciclo de sampleo, toma datos solo cada tiempo de descorrelacion
-    // for (int i = 0; i < n_iter; i++) {
-    //   metropolis(lattice, n, T, J, B, p_e, p_m, list);
-    //   // print_lattice(lattice, n);
-    //   energy_array[i] = *p_e;
-    //   magnet_array[i] = *p_m;
-    //   // printf("ARRAY MAG = %f\n", magnet_array[i]);
-    //   //printf("ARRAY ENERGIA = %f\n", energy_array[i]);
-    //   if (i%n_corr == 0){
-    //     fprintf(fdat, "%i,%3.6g,%3.3g,%3.3g \n",i, magnet_array[i], energy_array[i],T);
-    //     printf("dato tomado para T = %.2f, i = %i de %i\n", T, i/n_corr, n_iter/n_corr);
-    //   }
-    // }
+    for (int i = 0; i < n_iter; i++) {
+      metropolis(lattice, n, T, J, B, p_e, p_m, list);
+      // print_lattice(lattice, n);
+      energy_array[i] = *p_e;
+      magnet_array[i] = *p_m;
+      // printf("ARRAY MAG = %f\n", magnet_array[i]);
+      //printf("ARRAY ENERGIA = %f\n", energy_array[i]);
+      if (i%n_corr == 0){
+        fprintf(fdat, "%i,%3.6g,%3.3g,%3.3g \n",i, magnet_array[i], energy_array[i],T);
+        printf("dato tomado para T = %.3f, i = %i de %i\n", T, i/n_corr, n_iter/n_corr);
+      }
+    }
     //free(lattice);
     free(energy_array);
     free(magnet_array);
