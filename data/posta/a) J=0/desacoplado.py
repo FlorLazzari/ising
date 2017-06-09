@@ -60,11 +60,11 @@ magnet = np.zeros((n_iter_sample, range_temp_sample))
 energy = np.zeros((n_iter_sample, range_temp_sample))
 
 # separa los datos en columnas segun la temperatura
-for i in range(range_temp):
+for i in range(range_temp_sample):
     magnet[:,i] = samples[i*n_iter_sample : (i+1)*n_iter_sample,1]
     energy[:,i] = samples[i*n_iter_sample : (i+1)*n_iter_sample,2]
 
-mag_avg = np.mean(magnet,0)
+mag_avg = np.abs(np.mean(magnet,0))
 en_avg = np.mean(energy,0)
 
 
@@ -74,20 +74,22 @@ en_avg = np.mean(energy,0)
 plt.figure()
 
 plt.subplot(1,2,1)
-plt.plot(param, mag_avg)
+plt.plot(param, mag_avg, '*')
 plt.grid(True)
+plt.xlim(0,10)
 plt.xlabel('B/T')
 plt.ylabel('magnetizacion')
 plt.title('magnetizacion en function de la temperatura')
 
-plt.legend()
+#plt.legend()
 
 plt.subplot(1,2,2)
-plt.plot(param, en_avg)
+plt.plot(param, en_avg,'*')
 plt.grid(True)
+plt.xlim(0,10)
 plt.xlabel('Tiempo')
 plt.ylabel('energia')
-plt.legend()
+#plt.legend()
 plt.title('Fluctuaciones de energia en el tiempo')
 
 plt.show()
