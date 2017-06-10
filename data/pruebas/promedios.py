@@ -2,11 +2,11 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-samples = np.loadtxt("prueba_sample_n32_100_100temps_B151.csv", delimiter = ',', skiprows=1)
+samples = np.loadtxt("sampleo_n32_100_100temp_B1_J1.csv", delimiter = ',', skiprows=1)
 
 n_iter = 100    # cantidad de datos sampleados para cada temperatura
 range_temp = 100 #cantidad de temperaturas
-temp_max = 4
+temp_max = 10
 temperatura = np.linspace(temp_max/range_temp, temp_max, range_temp)
 
 #%% Obtener mag y en
@@ -27,6 +27,7 @@ en_avg = np.mean(energy,0)
 plt.figure()
 plt.subplot(2,1,1)
 plt.plot(temperatura, mag_avg, '*')
+plt.ylim([0,1.02])
 plt.grid(True)
 plt.xlabel('Temperatura')
 plt.ylabel('magnetizacion')

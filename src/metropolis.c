@@ -5,10 +5,10 @@
 
 int metropolis(int *lattice, int n, float T, float J, float B, float* p_e , float* p_m, double* list) { // esto esta bien?
   int site = pick_site(lattice, n);
-  printf("el sitio elegido es %i\n", site);
+  // printf("el sitio elegido es %i\n", site);
   double r;
   float DE = delta_E(lattice, n, site, J, B);
-  printf("el DE de metropolis es %f\n",DE); // me da cero asi que acá falla
+  // printf("el DE de metropolis es %f\n",DE); // me da cero asi que acá falla
   float DM = delta_magnet(lattice, site, n);
   if (DE <= 0) { // tomo el cambio
     flip(lattice, n, site);
@@ -19,8 +19,9 @@ int metropolis(int *lattice, int n, float T, float J, float B, float* p_e , floa
   }
   else {
     r = (((double)rand())/RAND_MAX);
-    printf("el random de metropolis es %lf \n", r);
-    double prob_exp = probability(lattice[site], DE, J, B, T, list);
+    // printf("el random de metropolis es %lf \n", r);
+    // double prob_exp = probability(lattice[site], DE, J, B, T, list);
+    double prob_exp = exp(-DE/T);
     if (r < prob_exp){
       flip(lattice, n, site);
       //printf("la energia antes de cambiar es %f\n",*p_e);
@@ -105,7 +106,7 @@ int list_exp(double *list, float T, float J, float B){
   for (i = 0; i < 5; i++) {
     DE = (double)(2*(J*(i*2-4)+B));
     list[i] = exp(-(DE/T)); //el exp de verdad
-    printf("list exp -- con DE = %lf tengo exp = %lf\n", DE, list[i]);
+    // printf("list exp -- con DE = %lf tengo exp = %lf\n", DE, list[i]);
   }
   return 0;
 }
@@ -120,7 +121,7 @@ double probability(int spin, float DE, float J, float B, float T, double *list){
     index = ((int)((DE/(2)-B)/J) + 4)/2; // ** le sacamos el spin??
   }
   double p = (list[index]); // *** SI NO FUNICONA MIRAR ACA Y EN LOS DOUBLE
-  printf("probability -- con DE = %f, el index es %i con prob = %lf\n", DE, index, p);
+  // printf("probability -- con DE = %f, el index es %i con prob = %lf\n", DE, index, p);
   return p;
 }
 
