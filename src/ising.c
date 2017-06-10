@@ -7,18 +7,18 @@
 
 int main(int argc, char **argv) {
   FILE *fdat;
-  fdat = fopen("sampleo_n32_100_100temp_B1_J1.csv", "w");
+  fdat = fopen("sample_n32_100_100temp_J1.csv", "w");
   fprintf(fdat, "i    M    E    T\n");
   int n = 32;
   int *lattice = malloc(n * n * sizeof(int));
   double *list = malloc(5* sizeof(double));
   float prob = 0.5;
-  float T = 2, J = 1, B = 1;
+  float T = 2, J = 1, B = 0;
   int range_temp = 100;
-  int n_term = 50000;
+  int n_term = 300000;
   int n_corr = 15000;
   int n_iter = 100*n_corr;
-  float T_max = 10;
+  float T_max = 5;
   srand(time(NULL));
 
   fill_lattice(lattice, n, prob); // lo hago una unica vez para reciclar el termalizado para la proxima T
@@ -48,8 +48,8 @@ int main(int argc, char **argv) {
       magnet_array[i] = *p_m;
       // printf("ARRAY MAG = %f\n", magnet_array[i]);
       //printf("ARRAY ENERGIA = %f\n", energy_array[i]);
-  	  //fprintf(fdat, "%i,%3.6g,%3.3g,%3.3g \n",i, magnet_array[i], energy_array[i],T);
-      //printf("dato tomado para T = %.2f, i = %i de %i\n", T, i, n_term);
+  	  // fprintf(fdat, "%i,%3.6g,%3.3g,%3.3g \n",i, magnet_array[i], energy_array[i],T);
+      // printf("dato tomado para T = %.2f, i = %i de %i\n", T, i, n_term);
     }
     //
     // // ciclo de sampleo, toma datos solo cada tiempo de descorrelacion
