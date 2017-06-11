@@ -35,6 +35,39 @@ int metropolis(int *lattice, int n, float T, float J, float B, float* p_e , floa
   return 0;
 }
 
+// para el punto e)
+int metropolis_2(int *lattice, int n, float T, float J, float B, float* p_e , float* p_m, double* list) { // esto esta bien?
+  int site = pick_site(lattice, n);
+  // printf("el sitio elegido es %i\n", site);
+  double r;
+  float DE = delta_E_2(lattice, n, site, J, B);
+  // printf("el DE de metropolis es %f\n",DE); // me da cero asi que acá falla
+  float DM = delta_magnet(lattice, site, n);
+  if (DE <= 0) { // tomo el cambio
+    flip(lattice, n, site);
+    //printf("la energia antes de cambiar es %f\n",*p_e);
+    *p_e += DE;
+    *p_m += DM;
+    //printf("la energia despues del cambio es %f\n",*p_e);
+  }
+  else {
+    r = (((double)rand())/RAND_MAX);
+    // printf("el random de metropolis es %lf \n", r);
+    // double prob_exp = probability(lattice[site], DE, J, B, T, list);
+    double prob_exp = exp(-DE/T);
+    if (r < prob_exp){
+      flip(lattice, n, site);
+      //printf("la energia antes de cambiar es %f\n",*p_e);
+      *p_e += DE;
+      *p_m += DM;
+      //printf("la energia despues del cambio es %f\n",*p_e);
+    }
+    else {
+    }
+  }
+  return 0;
+}
+
 float magnet(int *lattice, int n){
   int i;
   float M = 0;
@@ -71,6 +104,36 @@ float delta_E (int *lattice, int n, int site, float J, float B){
   return DE;
 }
 
+float delta_E_2 (int *lattice, int n, int site, float J, float B){ //para el punto e)
+  float DE = 0; //ACA HABIA UN INTTTTTTTT *emoji de kurt cobain*
+  int sum_neigh_1 = 0;
+  int sum_neigh_2 = 0;
+  int i, j;
+  j = site%n;
+  i = site/n; // ****funciona usar site/n ?
+
+  int up, right, down, left;
+  up = ((i-1+n)%n)*n+j;
+  down = j+((i+1+n)%n)*n;
+  right = ((j+1+n)%n)+i*n;
+  left = ((j-1+n)%n)+i*n;
+
+  // calcula la antiferro para 2dos vecinos
+  int up_right, down_right, up_left, down_left;
+  up_right = (j+1+n)%n + n*((i-1+n)%n);
+  down_right = (j+1+n)%n + n*((i+1+n)%n);
+  up_left = (j-1+n)%n + n*((i-1+n)%n);
+  down_left = (j-1+n)%n + n*((i+1+n)%n);
+
+  sum_neigh_1 = lattice[right] + lattice[down] + lattice[left] + lattice[up];
+  sum_neigh_2 = lattice[up_right] + lattice[up_left] + lattice[down_right] + lattice[down_left];
+  DE = J*2*lattice[site]*sum_neigh_1 + 2*B*lattice[site] - J*2*lattice[site]*sum_neigh_2;
+  //printf("el delta del B es %f\n",2*B*lattice[site] );
+  //printf("la delta de energia desde la funcion es %f\n",DE );
+  return DE;
+}
+
+
 // calcula energia del lattice
 float energy(int *lattice, int n, float J, float B) {
   int i, j;
@@ -88,6 +151,32 @@ float energy(int *lattice, int n, float J, float B) {
       // ver si se puede mejorar el sum_E, abajo otra solucion
       //E += sum_E(lattice, selected, right, down);
       E += ( (-J)*lattice[selected]*(lattice[right]+lattice[down]) - B*(float)lattice[selected] );
+      //printf("el sitio i,j = %i %i contribuye con E = %f \n", i, j, - B*(float)lattice[selected] );
+    }
+  }
+  return E;
+}
+
+float energy_2(int *lattice, int n, float J, float B) { //para el punto e)
+  int i, j;
+  int down;
+  int right;
+  int selected;
+  int up_right;
+  int down_right;
+  float E = 0;
+
+	for (i=0; i<n; i++){ // recorre filas
+		for (j=0; j<n; j++){ // recorre columnas
+			selected = i*n+j;
+			down = j+((i+1+n)%n)*n; // para ultima fila, es [(2n)%n *n + j] = j
+			right = ((j+1+n)%n)+i*n; // para ultima columna es [(2n)%n + i*n] = i*n
+      up_right = (j+1+n)%n + n*((i-1+n)%n); //agrega segundos vecinos diagonales
+      down_right = (j+1+n)%n + n*((i+1+n)%n);
+      // ver si se puede mejorar el sum_E, abajo otra solucion
+      //E += sum_E(lattice, selected, right, down);
+      E += ( (-J)*lattice[selected]*(lattice[right]+lattice[down]) - B*(float)lattice[selected]
+            J*lattice[selected]*(lattice[up_right]+lattice[down_right]) ); // termino de segundos vecinos
       //printf("el sitio i,j = %i %i contribuye con E = %f \n", i, j, - B*(float)lattice[selected] );
     }
   }
