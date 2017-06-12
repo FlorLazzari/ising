@@ -21,17 +21,19 @@ for i in range(range_temp):
 
 mag_avg = np.abs(np.mean(magnet,0))
 en_avg = np.mean(energy,0)
+mag_teo = np.nan_to_num((1-(np.sinh(2/temperatura))**(-4))**(1/8))
 
 #%% Graficar
 
 plt.figure()
 plt.subplot(2,1,1)
-plt.plot(temperatura, mag_avg, '*')
+plt.plot(temperatura, mag_avg, '*', label = 'simulacion')
+plt.plot(temperatura, mag_teo, 'r', label = 'teorico')
 plt.grid(True)
 plt.xlabel('Temperatura')
 plt.ylabel('magnetizacion')
 plt.title('Magnetizacion en funcion de la temperatura para n = %i' % n_iter)
-#plt.legend()
+plt.legend()
 
 plt.subplot(2,1,2)
 plt.plot(temperatura, en_avg, '*')
