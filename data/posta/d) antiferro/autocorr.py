@@ -4,7 +4,7 @@ from __future__ import division
 import numpy as np
 import matplotlib.pyplot as plt
 
-datos = np.loadtxt("termalizacion_n128_300k_10temp_J1.csv", delimiter = ',', skiprows=1)
+datos = np.loadtxt("termalizacion_n32_300k_10temp_J-1_B01.csv", delimiter = ',', skiprows=1)
 
 
 # habria que cambiar el n_iter del ising.c a un numero mas grande, segun guille
@@ -128,8 +128,8 @@ for i in range(range_temp):
     rho_m[:,i] = autocorr(m[:,i])
     rho_e[:,i] = autocorr(e[:,i])
 
-np.save('128_rho_m', rho_m)
-np.save('128_rho_m_rho_e', rho_e)
+np.save('J-1_rho_m', rho_m)
+np.save('J-1_rho_m_rho_e', rho_e)
 
 #%% Graficar autocorr
 
@@ -193,8 +193,8 @@ for i in range(range_temp):
 rho_prom_m = np.mean(rho_part_m,1)
 rho_prom_e = np.mean(rho_part_e,1)
 
-np.save('128_rho_prom_m_{:d}'.format(particiones), rho_prom_m)
-np.save('128_rho_prom_e_{:d}'.format(particiones), rho_prom_e)
+np.save('J-1_rho_prom_m_{:d}'.format(particiones), rho_prom_m)
+np.save('J-1_rho_prom_e_{:d}'.format(particiones), rho_prom_e)
 
 #%% Graficar autocorr promediada
 
