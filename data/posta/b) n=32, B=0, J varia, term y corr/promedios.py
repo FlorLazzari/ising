@@ -6,7 +6,7 @@ samples = np.loadtxt("sample_n32_100_100temp_J1.csv", delimiter = ',', skiprows=
 
 n_iter = 100    # cantidad de datos sampleados para cada temperatura
 range_temp = 100 #cantidad de temperaturas
-temp_max = 6
+temp_max = 5
 temperatura = np.linspace(temp_max/range_temp, temp_max, range_temp)
 
 #%% Obtener mag y en
