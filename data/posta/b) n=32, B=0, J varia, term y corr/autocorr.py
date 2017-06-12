@@ -1,17 +1,18 @@
 # -*- coding: utf-8 -*-
 from __future__ import division
+
 import numpy as np
 import matplotlib.pyplot as plt
 
-datos = np.loadtxt("termalizacion_n32_J01_300k_Tmax05.csv", delimiter = ',', skiprows=1)
-
+datos = np.loadtxt("termalizacion_n32_300k_10temp_J1.csv", delimiter = ',', skiprows=1)
+np.save('32_datos', datos)
 
 # habria que cambiar el n_iter del ising.c a un numero mas grande, segun guille
 # para 50000 iteraciones todavia no termalizo
 n_iter = 300 * 1000 # cantidad de iteraciones para cada temperatura (de ising.c)
 tiempo_term = 150 * 1000 #estimado del tiempo de termalizacion (a ojo)
 range_temp = 10 #cantidad de temperaturas
-temp_max = 0.5
+temp_max = 5
 temperatura = np.linspace(temp_max/range_temp, temp_max, range_temp)
 
 
@@ -122,17 +123,19 @@ def autocorr(x):
     result = np.correlate(x, x, mode='full')/np.sum(x**2)
     return result[result.size//2:]
 
-#for i in range(range_temp):
-for i in [0,5,9]:
+for i in range(range_temp):
+# for i in [1,5,9]:
     rho_m[:,i] = autocorr(m[:,i])
     rho_e[:,i] = autocorr(e[:,i])
 
+np.save('32_rho_m', rho_m)
+np.save('32_rho_m_rho_e', rho_e)
 
 #%% Graficar autocorr
 
 plt.figure()
 #for temp in range(10):
-for temp in [0,5,9]:
+for temp in range(range_temp):
     plt.subplot(1,2,1)
     plt.plot(t_rho, rho_m[:,temp], label = 'T = {:.2f}'.format(temperatura[temp]))
 
@@ -181,8 +184,8 @@ rho_part_e = np.zeros((n_part, particiones, range_temp))
 #            rho_part_e[k-1,j,i] = np.sum(e[j*n_part : (j+1)*n_part-k ,i] *
 #                      e[j*n_part + k : (j+1)*n_part ,i]) / np.sum(e[j*n_part : (j+1)*n_part ,i]**2)
 
-#for i in range(range_temp):
-for i in [0, 5, 9]:
+for i in range(range_temp):
+# for i in [1, range_temp//2, range_temp-1]:
     for j in range(particiones):
         rho_part_m[:,j,i] = autocorr(m[j*n_part : (j+1)*n_part,i])
         rho_part_e[:,j,i] = autocorr(e[j*n_part : (j+1)*n_part,i])
@@ -190,6 +193,8 @@ for i in [0, 5, 9]:
 rho_prom_m = np.mean(rho_part_m,1)
 rho_prom_e = np.mean(rho_part_e,1)
 
+np.save('32_rho_prom_m_{:d}'.format(particiones), rho_prom_m)
+np.save('32_rho_prom_e_{:d}'.format(particiones), rho_prom_e)
 
 #%% Graficar autocorr promediada
 
@@ -197,8 +202,8 @@ rho_prom_e = np.mean(rho_part_e,1)
 # decaen a cero posta al final del intervalo, corte que medio turbiooo
 
 plt.figure()
-#for temp in range(10):
-for temp in [0, 5, 9]:
+for temp in range(range_temp):
+# for temp in [1, range_temp//2, range_temp-1]:
     plt.subplot(1,2,1)
     plt.plot(t_rho_prom, rho_prom_m[:,temp], label = 'T = {:.2f}'.format(temperatura[temp]))
 
