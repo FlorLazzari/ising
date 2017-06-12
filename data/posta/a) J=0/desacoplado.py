@@ -67,6 +67,8 @@ for i in range(range_temp_sample):
 mag_avg = np.abs(np.mean(magnet,0))
 en_avg = np.mean(energy,0)
 
+mag_teo = np.tanh(param)
+en_teo = -32*32*np.tanh(param)
 
 #%% Graficar
 
@@ -74,22 +76,25 @@ en_avg = np.mean(energy,0)
 plt.figure()
 
 plt.subplot(1,2,1)
-plt.plot(param, mag_avg, '*')
+plt.plot(param, mag_avg, '*', label = 'Simulacion')
+plt.plot(param, mag_teo, 'r', label = 'Teorico')
 plt.grid(True)
-plt.xlim(0,10)
-plt.xlabel('B/T')
-plt.ylabel('magnetizacion')
-plt.title('magnetizacion en function de la temperatura')
+plt.xlim(0,6)
+plt.xlabel(' Temperatura ($ \\beta B$)')
+plt.ylabel('Magnetizacion por unidad de sitio')
+plt.title('Magnetizacion en function de la temperatura ($\\beta$)')
 
-#plt.legend()
+plt.legend()
 
 plt.subplot(1,2,2)
-plt.plot(param, en_avg,'*')
+plt.plot(param, en_avg,'*', label = 'Simulacion')
+plt.plot(param, en_teo, 'r', label = 'Teorico')
 plt.grid(True)
-plt.xlim(0,10)
-plt.xlabel('Tiempo')
-plt.ylabel('energia')
-#plt.legend()
-plt.title('Fluctuaciones de energia en el tiempo')
+plt.xlim(0,6)
+plt.xlabel(' Temperatura ($ \\beta B$)')
+plt.ylabel('Energia')
+plt.legend()
+plt.title('Energia en function de la temperatura ($\\beta$)')
 
+#plt.tight_layout()
 plt.show()
