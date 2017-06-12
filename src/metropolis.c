@@ -175,8 +175,7 @@ float energy_2(int *lattice, int n, float J, float B) { //para el punto e)
       down_right = (j+1+n)%n + n*((i+1+n)%n);
       // ver si se puede mejorar el sum_E, abajo otra solucion
       //E += sum_E(lattice, selected, right, down);
-      E += ( (-J)*lattice[selected]*(lattice[right]+lattice[down]) - B*(float)lattice[selected]
-            J*lattice[selected]*(lattice[up_right]+lattice[down_right]) ); // termino de segundos vecinos
+      E += ( (-J)*lattice[selected]*(lattice[right]+lattice[down]) - B*(float)lattice[selected] + J*lattice[selected]*(lattice[up_right]+lattice[down_right]) ); // termino de segundos vecinos
       //printf("el sitio i,j = %i %i contribuye con E = %f \n", i, j, - B*(float)lattice[selected] );
     }
   }
