@@ -1,0 +1,113 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Mon Jun 12 19:51:27 2017
+
+@author: martin
+"""
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+n_iter = 300 * 1000 # cantidad de iteraciones para cada temperatura (de ising.c)
+tiempo_term = 150 * 1000 #estimado del tiempo de termalizacion (a ojo)
+range_temp = 10 #cantidad de temperaturas
+temp_max = 5
+temperatura = np.linspace(temp_max/range_temp, temp_max, range_temp)
+n = 32
+
+datos = np.load('32_datos.npy')
+
+rho_m = np.load('32_rho_m.npy')
+rho_e = np.load('32_rho_e.npy')
+
+rho_prom_m = np.load('32_rho_prom_m_50.npy')
+rho_prom_e = np.load('32_rho_prom_e_50.npy')
+
+
+#%% Graficar para termalizacion
+
+plt.figure()
+
+for i in range(range_temp):
+    plt.subplot(1,2,1)
+    plt.plot(datos[0 : n_iter, 0], datos[i*n_iter : (i+1)*n_iter,1], label = 'T = {:.2f}'.format(temperatura[i]))
+
+    plt.subplot(1,2,2)
+    plt.plot(datos[0 : n_iter, 0], datos[i*n_iter : (i+1)*n_iter,2]/(n*n), label = 'T = {:.2f}'.format(temperatura[i]))
+
+plt.subplot(1,2,1)
+plt.grid(True)
+plt.xlabel('Tiempo')
+plt.ylabel('Magnetizacion por sitio')
+plt.title('Magnetizacion en el tiempo', fontsize = 15)
+plt.legend()
+
+plt.subplot(1,2,2)
+plt.grid(True)
+plt.xlabel('Tiempo')
+plt.ylabel('Energia por sitio')
+plt.legend()
+plt.title('Energia en el tiempo', fontsize = 15)
+
+plt.show()
+
+
+#%% Graficar autocorr
+
+plt.figure()
+for temp in range(range_temp):
+    plt.subplot(1,2,1)
+    plt.plot(rho_m[:,temp], label = 'T = {:.2f}'.format(temperatura[temp]))
+
+    plt.subplot(1,2,2)
+    plt.plot(rho_e[:,temp], label = 'T = {:.2f}'.format(temperatura[temp]))
+
+plt.subplot(1,2,1)
+plt.legend()
+plt.title('Autocorrelacion de magnetizacion en funcion del tiempo')
+plt.grid(True)
+plt.xlabel('Tiempo')
+plt.ylabel('Autocorrelacion (mag)')
+
+plt.subplot(1,2,2)
+plt.legend()
+plt.title('Autocorrelacion de energia en funcion del tiempo')
+plt.grid(True)
+plt.xlabel('Tiempo')
+plt.ylabel('Autocorrelacion (en)')
+
+plt.show()
+
+
+#%% Graficar autocorr promediada
+
+# los graficos decaen bien pero (para cualquier cantidad de particiones?)
+# decaen a cero posta al final del intervalo, corte que medio turbiooo
+
+plt.figure()
+for temp in range(range_temp):
+# for temp in [1, range_temp//2, range_temp-1]:
+    plt.subplot(1,2,1)
+    plt.plot(rho_prom_m[:,temp], label = 'T = {:.2f}'.format(temperatura[temp]))
+
+    plt.subplot(1,2,2)
+    plt.plot(rho_prom_e[:,temp], label = 'T = {:.2f}'.format(temperatura[temp]))
+
+plt.subplot(1,2,1)
+plt.legend()
+plt.title('Autocorrelacion de magnetizacion en funcion del tiempo (promediada para %i valores)' % 50)
+plt.grid(True)
+plt.xlabel('Tiempo')
+plt.ylabel('Autocorrelacion (mag)')
+
+plt.subplot(1,2,2)
+plt.legend()
+plt.title('Autocorrelacion de energia en funcion del tiempo (promediada para %i valores)' % 50)
+plt.grid(True)
+plt.xlabel('Tiempo')
+plt.ylabel('Autocorrelacion (en)')
+
+plt.show()
+
+
