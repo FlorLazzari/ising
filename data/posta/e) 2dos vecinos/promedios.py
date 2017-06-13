@@ -2,9 +2,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-samples = np.loadtxt("sample_prueba_n32_100_100temps.csv", delimiter = ',', skiprows=1)
+samples = np.loadtxt("sample_n32_1k_100temp_J1_2ds.csv", delimiter = ',', skiprows=1)
 
-n_iter = 100    # cantidad de datos sampleados para cada temperatura
+n_iter = 1000    # cantidad de datos sampleados para cada temperatura
 range_temp = 100 #cantidad de temperaturas
 temp_max = 5
 temperatura = np.linspace(temp_max/range_temp, temp_max, range_temp)
@@ -26,20 +26,20 @@ en_avg = np.mean(energy,0)
 
 plt.figure()
 plt.subplot(2,1,1)
-plt.plot(temperatura, mag_avg, '*')
+plt.plot(temperatura, mag_avg, 'r*')
 plt.grid(True)
 plt.xlabel('Temperatura')
 plt.ylabel('magnetizacion')
-plt.title('Magnetizacion en funcion de la temperatura para n = %i' % n_iter)
+plt.title('Magnetizacion en funcion de la temperatura para interacción con 2dos vecinos', fontsize = 15)
 #plt.legend()
 
 plt.subplot(2,1,2)
-plt.plot(temperatura, en_avg, '*')
+plt.plot(temperatura, en_avg, 'r*')
 plt.grid(True)
 plt.xlabel('Temperatura')
 plt.ylabel('energia')
 #plt.legend()
-plt.title('Energia en funcion de la temperatura para n = %i' % n_iter)
+plt.title('Energia en funcion de la temperatura para interacción con 2dos vecinos', fontsize = 15)
 
-plt.tight_layout()
+#plt.tight_layout()
 plt.show()
