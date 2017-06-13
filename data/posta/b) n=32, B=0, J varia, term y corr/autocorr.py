@@ -129,7 +129,7 @@ for i in range(range_temp):
     rho_e[:,i] = autocorr(e[:,i])
 
 np.save('32_rho_m', rho_m)
-np.save('32_rho_m_rho_e', rho_e)
+np.save('32_rho_e', rho_e)
 
 #%% Graficar autocorr
 
@@ -164,7 +164,7 @@ plt.show()
 # intento ahora partir el intervalo de tiempo en particiones, y calcular rho
 # en cada uno, para después promediarlos.
 
-particiones = 100
+particiones = 50
 n_part = int(N/particiones)
 t_rho_prom = np.arange(n_part)
 rho_part_m = np.zeros((n_part, particiones, range_temp))
