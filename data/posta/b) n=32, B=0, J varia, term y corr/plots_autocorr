@@ -56,7 +56,7 @@ plt.show()
 #%% Graficar autocorr
 
 plt.figure()
-for temp in range(range_temp):
+for temp in [0,3,4,9]: #range(range_temp):
     plt.subplot(1,2,1)
     plt.plot(rho_m[:,temp], label = 'T = {:.2f}'.format(temperatura[temp]))
 
@@ -65,14 +65,14 @@ for temp in range(range_temp):
 
 plt.subplot(1,2,1)
 plt.legend()
-plt.title('Autocorrelacion de magnetizacion en funcion del tiempo')
+plt.title('Autocorrelacion de magnetizacion', fontsize = 15)
 plt.grid(True)
 plt.xlabel('Tiempo')
 plt.ylabel('Autocorrelacion (mag)')
 
 plt.subplot(1,2,2)
 plt.legend()
-plt.title('Autocorrelacion de energia en funcion del tiempo')
+plt.title('Autocorrelacion de energia', fontsize = 15)
 plt.grid(True)
 plt.xlabel('Tiempo')
 plt.ylabel('Autocorrelacion (en)')
@@ -86,7 +86,8 @@ plt.show()
 # decaen a cero posta al final del intervalo, corte que medio turbiooo
 
 plt.figure()
-for temp in range(range_temp):
+plt.suptitle('Autocorrelacion promediada para 50 valores', fontsize = 15)
+for temp in [0,3,4,9]: #range(range_temp):
 # for temp in [1, range_temp//2, range_temp-1]:
     plt.subplot(1,2,1)
     plt.plot(rho_prom_m[:,temp], label = 'T = {:.2f}'.format(temperatura[temp]))
@@ -96,14 +97,14 @@ for temp in range(range_temp):
 
 plt.subplot(1,2,1)
 plt.legend()
-plt.title('Autocorrelacion de magnetizacion en funcion del tiempo (promediada para %i valores)' % 50)
+#plt.title('')
 plt.grid(True)
 plt.xlabel('Tiempo')
 plt.ylabel('Autocorrelacion (mag)')
 
 plt.subplot(1,2,2)
 plt.legend()
-plt.title('Autocorrelacion de energia en funcion del tiempo (promediada para %i valores)' % 50)
+#plt.title('Autocorrelacion de energia (promediada para %i valores)' % 50)
 plt.grid(True)
 plt.xlabel('Tiempo')
 plt.ylabel('Autocorrelacion (en)')
